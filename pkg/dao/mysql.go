@@ -2,13 +2,10 @@ package dao
 
 import (
 	"context"
-	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
-	"io"
+	logger2 "gorm.io/gorm/logger"
 	"log"
-	"os"
 	"time"
 	"trace_demo/configs"
 )
@@ -22,9 +19,7 @@ type Config struct {
 func Startup(config Config) {
 	dbMap = make(map[string]*gorm.DB)
 	for _, item := range config.DSNList {
-		db, err := gorm.Open(mysql.Open(item.DSN), &gorm.Config{
-			Logger: &sqlLogger{os.Stdout},
-		})
+		db, err := gorm.Open(mysql.Open(item.DSN), &gorm.Config{})
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -49,32 +44,14 @@ func Startup(config Config) {
 func GetDB(ctx context.Context, name string) *gorm.DB {
 	return dbMap[name].Session(&gorm.Session{
 		Context: ctx,
-		Logger:  &sqlLogger{os.Stdout},
+		Logger:  NewLogger(ctx, logger2.Info),
 	})
 }
 
-type sqlLogger struct {
-	io.Writer
+type Dao struct {
+	db *gorm.DB
 }
 
-func (l sqlLogger) LogMode(level logger.LogLevel) logger.Interface {
-	fmt.Println(level)
-	return &l
-}
-
-func (l sqlLogger) Info(ctx context.Context, msg string, others ...interface{}) {
-	l.Write([]byte(msg))
-}
-
-func (l sqlLogger) Warn(ctx context.Context, msg string, others ...interface{}) {
-	l.Write([]byte(msg))
-}
-
-func (l sqlLogger) Error(ctx context.Context, msg string, others ...interface{}) {
-	l.Write([]byte(msg))
-}
-
-func (l sqlLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {
-	sql, _ := fc()
-	l.Write([]byte(sql + ctx.Value("request_id").(string)))
+func New(ctx context.Context, name string) *Dao {
+	return &Dao{db: GetDB(ctx, name)}
 }
