@@ -74,7 +74,7 @@ func (l Logger) Error(msg string) {
 func (l Logger) Printf(level LogLevel, content string) {
 	//time project_name level action content @trace_id
 	//2021-09-10 12:30:21 trace_demo 1 blog/get-detail [GORM]select * from t_article limit 1  @AX1vYm-DSQmUAAnr
-	msg := fmt.Sprintf("%s %s %d %s %s @%s-%s\n", time.Now().UTC().Format(time.UnixDate), l.projectName, level, l.action, content, l.clientID, l.traceID)
+	msg := fmt.Sprintf("%s %s %d %s %s @%s-%s\n", time.Now().UTC().Format(time.RFC3339), l.projectName, level, l.action, content, l.clientID, l.traceID)
 
 	_, _ = l.Writer.Write([]byte(msg))
 }

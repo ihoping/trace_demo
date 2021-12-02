@@ -2,21 +2,24 @@ package common
 
 import (
 	"context"
+	"errors"
 )
 
-type TraceData struct {
-	ProjectName string
-	ClientID    string
-	TraceID     string
-	Action      string
-}
+const LoggerKey = "trace_logger"
 
-const TraceDataKey = "trace_data"
-
-func GetContext(traceData *TraceData) context.Context {
-	if traceData.ProjectName == "" {
-		traceData.ProjectName = ProjectName
+func GetContext(logData LogData) context.Context {
+	if logData.ProjectName == "" {
+		logData.ProjectName = ProjectName
 	}
 
-	return context.WithValue(context.Background(), TraceDataKey, traceData)
+	logger := NewLogger(LogInfo, logData)
+	return context.WithValue(context.Background(), LoggerKey, logger)
+}
+
+func GetLogger(ctx context.Context) (*Logger, error) {
+	logger, ok := ctx.Value(LoggerKey).(*Logger)
+	if ok {
+		return logger, nil
+	}
+	return nil, errors.New("logger not found")
 }

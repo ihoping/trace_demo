@@ -7,19 +7,18 @@ import (
 	"path/filepath"
 )
 
-type MysqlConfig struct {
+type RedisConfig struct {
 	Name     string
 	Host     string
 	Port     int
-	User     string
 	Password string
-	Database string
+	DB       int
 }
 
-var MySqlTraceDemo MysqlConfig
+var RedisTraceDemo RedisConfig
 
 func init() {
-	path, err := filepath.Abs("configs/mysql/trace_demo.yml")
+	path, err := filepath.Abs("configs/redis/trace_demo.yml")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,7 +27,7 @@ func init() {
 		log.Fatal(err)
 	}
 
-	err = yaml.Unmarshal(data, &MySqlTraceDemo)
+	err = yaml.Unmarshal(data, &RedisTraceDemo)
 	if err != nil {
 		log.Fatal(err)
 	}

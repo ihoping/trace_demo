@@ -28,11 +28,11 @@ func GetContext(ctx *gin.Context) context.Context {
 
 	action := ctx.Request.RequestURI
 
-	traceData := &common.TraceData{
+	logData := common.LogData{
 		ClientID: clientID,
 		TraceID:  traceID,
 		Action:   action,
 	}
 
-	return common.GetContext(traceData)
+	return common.GetContext(logData)
 }
