@@ -28,7 +28,7 @@ func (l logger) Info(ctx context.Context, msg string, data ...interface{}) {
 	}
 
 	if l.LogLevel >= gormLogger.Info {
-		commonLogger.Info("[GORM] " + msg + fmt.Sprintf("%v", data))
+		commonLogger.Info("[gorm] " + msg + fmt.Sprintf("%v", data))
 	}
 }
 
@@ -39,7 +39,7 @@ func (l logger) Warn(ctx context.Context, msg string, data ...interface{}) {
 		return
 	}
 	if l.LogLevel >= gormLogger.Warn {
-		commonLogger.Warn("[GORM] " + msg + fmt.Sprintf("%v", data))
+		commonLogger.Warn("[gorm] " + msg + fmt.Sprintf("%v", data))
 	}
 }
 
@@ -50,7 +50,7 @@ func (l logger) Error(ctx context.Context, msg string, data ...interface{}) {
 		return
 	}
 	if l.LogLevel >= gormLogger.Error {
-		commonLogger.Error("[GORM] " + msg + fmt.Sprintf("%v", data))
+		commonLogger.Error("[gorm] " + msg + fmt.Sprintf("%v", data))
 	}
 }
 
@@ -66,5 +66,5 @@ func (l logger) Trace(ctx context.Context, begin time.Time, fc func() (string, i
 
 	elapsed := time.Since(begin)
 	sql, rows := fc()
-	commonLogger.Info("[GORM] " + elapsed.String() + " " + sql + " | " + strconv.Itoa(int(rows)) + " rows returned")
+	commonLogger.Info("[gorm] " + elapsed.String() + " " + sql + " | " + strconv.Itoa(int(rows)) + " rows returned")
 }

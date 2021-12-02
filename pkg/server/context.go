@@ -11,7 +11,13 @@ const clientIDCookieName = "client_id"
 
 const traceIDHeader = "X-TRACE-ID"
 
+const contextKey = "context"
+
 func GetContext(ctx *gin.Context) context.Context {
+	if exist, ok := ctx.Value(contextKey).(context.Context); ok {
+		return exist
+	}
+
 	clientID := ctx.Request.Header.Get(clientIDHeader)
 	if clientID == "" {
 		clientID, _ = ctx.Cookie(clientIDCookieName)
@@ -34,5 +40,7 @@ func GetContext(ctx *gin.Context) context.Context {
 		Action:   action,
 	}
 
-	return common.GetContext(logData)
+	ctx2 := common.GetContext(logData)
+	ctx.Set(contextKey, ctx2)
+	return ctx2
 }

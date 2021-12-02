@@ -1,7 +1,6 @@
 package redis
 
 import (
-	"context"
 	"errors"
 	"github.com/go-redis/redis/v8"
 	"strconv"
@@ -40,9 +39,9 @@ func Shutdown() error {
 	return nil
 }
 
-func GetClient(name string, ctx context.Context) (*redis.Client, error) {
+func GetClient(name string) (*redis.Client, error) {
 	if client, ok := clientMap[name]; ok {
-		return client.WithContext(ctx), nil
+		return client, nil
 	}
 	return nil, errors.New("redis client not found")
 }

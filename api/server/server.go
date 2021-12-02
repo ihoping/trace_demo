@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"trace_demo/api/server/middleware"
 	"trace_demo/api/server/router"
 	"trace_demo/configs"
 	"trace_demo/pkg/dao"
@@ -12,7 +13,8 @@ type Server struct {
 }
 
 func (s *Server) Startup(addr string) error {
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery(), middleware.Logger())
 
 	router.Blog{}.Route(r.Group("/blog"))
 
